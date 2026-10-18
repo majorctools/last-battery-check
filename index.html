@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can Your "Dead" Battery Be Saved? — Free 60-Second Revival Check</title>
+<meta name="description" content="Interactive tool: check whether your old battery can be reconditioned at home, get your Revival Score, and see the exact method.">
+<style>
+  :root{
+    --ink:#1c2321; --paper:#f7f4ec; --card:#ffffff; --green:#1f5c42; --green-d:#143f2d;
+    --amber:#d98a1f; --amber-l:#f6e8cf; --muted:#6b7772; --line:#e3ded2;
+    --good:#1f5c42; --warn:#b26a15; --bad:#a33b30;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); line-height:1.5;}
+  .wrap{max-width:680px; margin:0 auto; padding:24px 16px 48px;}
+  header{ text-align:center; padding:8px 0 20px;}
+  .kicker{font-family:Verdana,Arial,sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--green); font-weight:bold;}
+  h1{font-size:clamp(24px,5vw,34px); line-height:1.2; margin:8px 0;}
+  .sub{color:var(--muted); font-size:15px; max-width:520px; margin:0 auto;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; margin-top:18px; box-shadow:0 2px 10px rgba(28,35,33,.05);}
+  .step-label{font-family:Verdana,Arial,sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:12px;}
+  .opts{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media (max-width:520px){ .opts{grid-template-columns:1fr;} }
+  .opt{border:2px solid var(--line); border-radius:10px; padding:14px; cursor:pointer; background:#fff; text-align:left; font-family:inherit; font-size:15px; transition:border-color .15s, background .15s;}
+  .opt small{display:block; color:var(--muted); font-size:12px; margin-top:2px;}
+  .opt:hover{border-color:var(--green);}
+  .opt.sel{border-color:var(--green); background:#eef5f1; font-weight:bold;}
+  .q{margin-top:18px;}
+  .q .qt{font-size:15px; font-weight:bold; margin-bottom:8px;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{border:2px solid var(--line); border-radius:999px; padding:7px 14px; cursor:pointer; background:#fff; font-family:Verdana,Arial,sans-serif; font-size:13px;}
+  .chip:hover{border-color:var(--amber);}
+  .chip.sel{border-color:var(--amber); background:var(--amber-l); font-weight:bold;}
+  .voltwrap{margin-top:20px;}
+  .voltwrap .qt{font-size:15px; font-weight:bold;}
+  .voltwrap .hint{font-size:12px; color:var(--muted); margin:4px 0 10px;}
+  input[type=range]{width:100%; accent-color:var(--green);}
+  .voltread{font-size:28px; font-weight:bold; color:var(--green); text-align:center; margin-top:4px;}
+  .voltread span{font-size:14px; color:var(--muted); font-weight:normal;}
+  .btn{display:block; width:100%; margin-top:22px; background:var(--green); color:#fff; border:none; border-radius:10px; padding:16px; font-size:17px; font-family:Verdana,Arial,sans-serif; font-weight:bold; cursor:pointer;}
+  .btn:hover{background:var(--green-d);}
+  .btn:disabled{background:#c9d1cd; cursor:not-allowed;}
+  .progress{height:6px; background:var(--line); border-radius:3px; margin-top:18px; overflow:hidden;}
+  .progress i{display:block; height:100%; background:var(--amber); width:0%; transition:width .3s;}
+  /* results */
+  .scorebox{text-align:center; padding:10px 0 4px;}
+  .ring{position:relative; width:170px; height:170px; margin:0 auto;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .num{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .ring .num b{font-size:44px;}
+  .ring .num i{font-style:normal; font-family:Verdana,Arial,sans-serif; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted);}
+  .verdict{font-size:20px; font-weight:bold; text-align:center; margin-top:10px;}
+  .explanation{margin-top:14px; font-size:15px;}
+  .method{margin-top:16px; border-left:4px solid var(--amber); background:var(--amber-l); border-radius:0 10px 10px 0; padding:14px 16px; font-size:14px;}
+  .method b{display:block; margin-bottom:4px; font-family:Verdana,Arial,sans-serif; font-size:13px; letter-spacing:.5px; text-transform:uppercase; color:var(--warn);}
+  .cta{margin-top:22px; text-align:center;}
+  .cta a{display:block; background:var(--amber); color:#241a05; border-radius:10px; padding:18px 16px; font-family:Verdana,Arial,sans-serif; font-weight:bold; font-size:16px; text-decoration:none;}
+  .cta a:hover{filter:brightness(1.06);}
+  .cta p{font-size:12px; color:var(--muted); margin-top:8px;}
+  .again{background:none; border:none; color:var(--green); text-decoration:underline; font-size:13px; margin-top:14px; cursor:pointer;}
+  footer{margin-top:26px; font-size:11.5px; color:var(--muted); font-family:Verdana,Arial,sans-serif; line-height:1.6;}
+  .hide{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Free Battery Rescue Check · 60 Seconds</div>
+    <h1>Is your "dead" battery really dead — or just salted?</h1>
+    <p class="sub">Most lead-acid batteries people throw away can be revived at home. Answer 3 quick questions and get your <b>Revival Score</b> and the method that fits.</p>
+  </header>
+
+  <section class="card" id="quiz">
+    <div class="step-label">Step <span id="stepNum">1</span> of 3</div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <div class="q" id="q1">
+      <div class="qt">What kind of battery are we checking?</div>
+      <div class="opts" id="typeOpts">
+        <button class="opt" data-v="car">Car / truck 12V<small>starting battery, sitting dead</small></button>
+        <button class="opt" data-v="moto">Motorcycle / scooter / ATV<small>12V, stored too long</small></button>
+        <button class="opt" data-v="marine">Marine / RV / deep-cycle<small>trolling motor, house bank</small></button>
+        <button class="opt" data-v="powersupply">Power tool / UPS / gadget<small>sealed lead-acid packs</small></button>
+      </div>
+    </div>
+
+    <div class="q hide" id="q2">
+      <div class="qt">How old is it, roughly?</div>
+      <div class="chips" id="ageOpts">
+        <button class="chip" data-v="new">Under 1 year</button>
+        <button class="chip" data-v="mid">1–3 years</button>
+        <button class="chip" data-v="old">3–6 years</button>
+        <button class="chip" data-v="ancient">6+ years</button>
+      </div>
+    </div>
+
+    <div class="q hide" id="q3">
+      <div class="qt">Best sign of life it has shown lately</div>
+      <div class="chips" id="symOpts">
+        <button class="chip" data-v="cranks">Cranks, but weak / slow</button>
+        <button class="chip" data-v="clicks">Clicks, lights dim, barely turns</button>
+        <button class="chip" data-v="charger">Charger says full, dies in days</button>
+        <button class="chip" data-v="stone">Stone cold — charger won't even register it</button>
+      </div>
+    </div>
+
+    <div class="voltwrap hide" id="q4">
+      <div class="qt">Optional: resting voltage <span style="font-weight:normal">(if you own a multimeter)</span></div>
+      <div class="hint">Set to "Skip" if you don't have one — it won't hurt your score.</div>
+      <input type="range" id="volt" min="0" max="13.8" step="0.1" value="12.4">
+      <div class="voltread"><span id="voltLbl">12.4 V</span></div>
+    </div>
+
+    <button class="btn" id="nextBtn" disabled>Next →</button>
+    <button class="btn hide" id="scoreBtn" disabled>Reveal my Revival Score</button>
+  </section>
+
+  <section class="card hide" id="result">
+    <div class="step-label">Your result</div>
+    <div class="scorebox">
+      <div class="ring">
+        <svg width="170" height="170" viewBox="0 0 170 170">
+          <circle cx="85" cy="85" r="70" fill="none" stroke="#e3ded2" stroke-width="16"/>
+          <circle id="arc" cx="85" cy="85" r="70" fill="none" stroke="#1f5c42" stroke-width="16" stroke-linecap="round"
+                  stroke-dasharray="0 999" style="transition:stroke-dasharray .9s ease;"/>
+        </svg>
+        <div class="num"><b id="scoreNum">0</b><i>revival score</i></div>
+      </div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <p class="explanation" id="explain"></p>
+    <div class="method"><b>Recommended method</b><span id="method"></span></div>
+    <div class="cta">
+      <a id="ctaLink" href="#" rel="sponsored nofollow">Show me the full step-by-step revival protocol →</a>
+      <p>Free instant access · video manual + illustrated guide · 60-day money-back guarantee by the publisher</p>
+    </div>
+    <button class="again" id="againBtn">↻ Check a different battery</button>
+  </section>
+
+  <footer>
+    <p><b>Disclosure:</b> The link above is an affiliate link. If you purchase through it, we may earn a commission at no extra cost to you. It helps keep this free tool running.</p>
+    <p><b>Safety:</b> Lead-acid batteries contain sulfuric acid and can short violently. Always remove jewelry, wear eye protection, work in a ventilated area, and never attempt reconditioning on a swollen, leaking, or frozen battery. This tool offers general educational information, not professional advice.</p>
+  </footer>
+</div>
+
+<script>
+const HOP = "https://hop.clickbank.net/?affiliate=cmajorprod&vendor=lastbatt&tid=eq-lm-01";
+const state = { type:null, age:null, sym:null, voltSkipped:true };
+
+const $ = id => document.getElementById(id);
+function wire(groupSel, key){
+  document.querySelectorAll(groupSel+" .opt, "+groupSel+" .chip").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      document.querySelectorAll(groupSel+" .sel").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel"); state[key]=b.dataset.v;
+      b.dataset.v==="skip" ? state.voltSkipped=true : null;
+      update();
+    });
+  });
+}
+wire("#typeOpts","type"); wire("#ageOpts","age"); wire("#symOpts","sym");
+
+const volt=$("volt");
+volt.addEventListener("input", ()=>{ state.voltSkipped=false; $("voltLbl").textContent=(+volt.value).toFixed(1)+" V"; });
+function skipVolt(){ state.voltSkipped=true; $("voltLbl").textContent="Skipped"; }
+
+let step=1;
+function showStep(n){
+  ["q1","q2","q3","q4"].forEach((id,i)=> $(id).classList.toggle("hide", i+1!==n));
+  $("stepNum").textContent=Math.min(n,3);
+  $("bar").style.width=(Math.min(n,3)/3*100)+"%";
+  $("nextBtn").classList.toggle("hide", n>3);
+  $("scoreBtn").classList.toggle("hide", n<=3);
+  if(n===4){ skipVolt(); update(); }
+}
+$("nextBtn").addEventListener("click", ()=>{
+  if(step===3){ showStep(4); step=4; } else { step++; showStep(step); }
+});
+$("scoreBtn").addEventListener("click", score);
+$("againBtn").addEventListener("click", ()=>{ location.reload(); });
+
+function canNext(){
+  if(step===1) return !!state.type;
+  if(step===2) return !!state.age;
+  if(step===3) return !!state.sym;
+  return true;
+}
+function update(){ $("nextBtn").disabled=!canNext(); $("scoreBtn").disabled=!canNext(); }
+
+function score(){
+  let s = 50;
+  // symptom weight (strongest signal)
+  s += ({cranks:+25, clicks:+12, charger:+2, stone:-18})[state.sym];
+  // age
+  s += ({new:+15, mid:+8, old:-4, ancient:-20})[state.age];
+  // type nuance
+  s += ({car:+4, moto:+8, marine:+2, powersupply:-6})[state.type];
+  // voltage override when provided
+  if(!state.voltSkipped){
+    const v=+volt.value;
+    if(v>=12.2) s+=10; else if(v>=11.8) s+=2; else if(v>=10.5) s-=8; else if(v>=6) s-=4; else s-=22;
+  }
+  s=Math.max(5,Math.min(97,s)); // clamp
+
+  $("result").classList.remove("hide");
+  $("quiz").classList.add("hide");
+  $("ctaLink").href=HOP;
+  const color = s>=70?"#1f5c42": s>=40?"#b26a15":"#a33b30";
+  $("arc").setAttribute("stroke",color); $("scoreNum").style.color=color;
+  requestAnimationFrame(()=>{ $("arc").setAttribute("stroke-dasharray", (s/100*440)+" 999"); });
+  animate($("scoreNum"), s);
+
+  const m = methodFor(state);
+  if(s>=70){
+    $("verdict").textContent="Strong candidate for revival";
+    $("verdict").style.color="#1f5c42";
+    $("explain").innerHTML="Your symptoms point to <b>sulfation</b> — sulfate crystals hardening on the plates — not physical death. That's the classic case home reconditioning protocols are built for, and a properly applied desulfation charge often returns most of the capacity.";
+  } else if(s>=40){
+    $("verdict").textContent="Worth attempting before you buy a replacement";
+    $("verdict").style.color="#b26a15";
+    $("explain").innerHTML="This battery is on the fence: some plates likely sulfated, possibly minor damage. The honest play: a revival attempt costs almost nothing and can buy you another season — and knowing exactly which step to skip for your battery type matters more than the tools you own.";
+  } else {
+    $("verdict").textContent="Likely near end-of-life — but don't toss it yet";
+    $("verdict").style.color="#a33b30";
+    $("explain").innerHTML="At this age and symptom level there may be active material loss or a shorted cell. Still: a simple cell-by-cell test distinguishes a cheaply salvageable pack from a true dead one — and replacement is expensive. Check the method below before you spend new-battery money.";
+  }
+  $("method").textContent=m;
+  $("result").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function methodFor(st){
+  const base="Desulfation smart-charge cycle + cell-level voltage audit (never open the sealed packs). ";
+  if(st.type==="powersupply") return "For sealed SLA packs (tools/UPS): open the case only if cells are accessible, balance-test each cell, and use low-current controlled charging. ";
+  if(st.type==="marine") return "Deep-cycle banks: measure each 2V cell's sag under load — reviving the weak cells in a bank is where the savings are. ";
+  if(st.sym==="stone") return "A charger that won't 'see' the battery usually needs a parallel 'jump-start' trick before a recondition cycle can even begin. ";
+  return base;
+}
+
+function animate(el, target){
+  let cur=0; const t=setInterval(()=>{ cur+=Math.ceil(target/30); if(cur>=target){cur=target;clearInterval(t);} el.textContent=cur; },25);
+}
+showStep(1); update();
+</script>
+</body>
+</html>
